@@ -5,3 +5,5 @@ BowlingGame
 
 작성자 : 김진원
 작성일 : 2013. 07. 24
+
+실행방법 : java -Dfile.encoding=UTF-8 Game
