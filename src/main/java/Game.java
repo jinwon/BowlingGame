@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -25,8 +26,14 @@ public class Game {
 
 	// 초기화 
 	public static void init() {
-		for(int l1 = 0; l1 < 10; l1++) scores[l1] = 0;
-		for(int l2 = 0; l2 < 12; l2++) allframes[0][l2] = allframes[1][l2] = 0;				
+		try {
+			for(int l1 = 0; l1 < 10; l1++) scores[l1] = 0;
+			for(int l2 = 0; l2 < 12; l2++) allframes[0][l2] = allframes[1][l2] = 0;							
+		}
+		catch (IndexOutOfBoundsException ex)
+		{
+			System.out.println("초기값 지정 오류가 발생하였습니다. ");
+		}
 	}
 	
 	// 프레임 시작 
@@ -38,19 +45,28 @@ public class Game {
 			int Pins = 0;
 
 			while(!chk) {
-				System.out.printf("\n\t 현재 프레임 %2d", (i + 1));
-			    System.out.printf("\n\t 투구1 점수를 입력하세요: ");
-				 
-			   	Pins = scoreInput.nextInt();			   
+			    try
+			    {				    	
+					System.out.printf("\n\t 현재 프레임 %2d", (i + 1));
+				    System.out.printf("\n\t 투구1 점수를 입력하세요: ");
 
-		 		if(Pins <= 10 && Pins >= 0) {
-		 			allframes[0][i] = Pins;
-		 			chk = true;
-		 			sumResult();
-		 			printFrameResult(i+1, 1);
-		 		}
-		 		//입력값 오류 
-		 		if(!chk) printError();
+			    	Pins = scoreInput.nextInt();
+			    
+			 		if(Pins <= 10 && Pins >= 0) {
+			 			allframes[0][i] = Pins;
+			 			chk = true;
+			 			sumResult();
+			 			printFrameResult(i+1, 1);
+			 		}
+			 		else {
+			 			printError();
+			 		}
+			    }
+			    catch (InputMismatchException ex) {
+			 		//입력값 오류 
+			 		if(!chk) printError();
+			 		scoreInput.nextLine();
+			    }
 			}
 
 			    
@@ -66,24 +82,31 @@ public class Game {
 				int Pins2 = 0;
 
 				if(chk) break;
-				System.out.printf("\n\t 현재 프레임 %2d", (i + 1));   
-				System.out.print("\n\t 투구2 점수를 입력하세요: ");
-				Pins2 = scoreInput.nextInt();
+				
+				try {
+					System.out.printf("\n\t 현재 프레임 %2d", (i + 1));   
+					System.out.print("\n\t 투구2 점수를 입력하세요: ");
+					Pins2 = scoreInput.nextInt();
 
-				// 두번째 값을 검증한다.
-				if(Pins2 <= 10 && Pins2 >= 0 && Pins2 + allframes[0][i] < 11) 
-				{
-				   allframes[1][i] = Pins2;
+					// 두번째 값을 검증한다.
+					if(Pins2 <= 10 && Pins2 >= 0 && Pins2 + allframes[0][i] < 11) 
+					{
+					   allframes[1][i] = Pins2;
 
-				   if(Pins2 + allframes[0][i] == 10) printSpare();
-				   chk = true;
-				   sumResult();
-				   printFrameResult(i+1, 2);
-				   
-				}
-
-		 		//입력값 오류 
-		 		if(!chk) printError();
+					   if(Pins2 + allframes[0][i] == 10) printSpare();
+					   chk = true;
+					   sumResult();
+					   printFrameResult(i+1, 2);				   
+					}
+			 		else {
+			 			printError();
+			 		}
+				}				
+			    catch (InputMismatchException ex) {
+			    	//입력값 오류 
+			    	if(!chk) printError();
+			    	scoreInput.nextLine();
+			    }
 
 			} while(true);
 
@@ -103,16 +126,22 @@ public class Game {
 
 		    while(!chk_error1) 
 		    {
-		    	System.out.print("\n\t 현재 프레임 보너스1\n\t 투구1 점수를 입력하세요 : ");
-		    	bonus1 = scoreInput.nextInt();
-
-		    	if(bonus1 < 11 && bonus1 >= 0) {
-		    		allframes[0][10] = bonus1;
-		    		chk_error1 = true;
-		    		
-		 			sumResult();
-		 			printFrameResult(11, 1);
+		    	try{
+			    	System.out.print("\n\t 현재 프레임 보너스1\n\t 투구1 점수를 입력하세요 : ");
+			    	bonus1 = scoreInput.nextInt();
+	
+			    	if(bonus1 < 11 && bonus1 >= 0) {
+			    		allframes[0][10] = bonus1;
+			    		chk_error1 = true;
+			    		
+			 			sumResult();
+			 			printFrameResult(11, 1);
+			    	}
 		    	}
+			    catch (InputMismatchException ex) {
+			    	if(!chk_error1) printError();
+			    	scoreInput.nextLine();
+			    }
 		    }
 			
 		    // 보너스 프레임에서 스트라이크 
@@ -126,16 +155,24 @@ public class Game {
 		    	if(allframes[0][11] == 10) printStrike();
 
 		    	 while(!chk_error2) {
-		    	    System.out.print("\n\t 현재 프레임 보너스2\n\t 투구2 점수를 입력하세요: ");
-		    		bonus2 = scoreInput.nextInt();
 
-		    		if(bonus2 < 11 && bonus2 > 0) {
-		    			allframes[0][11] = bonus2;
-		    			chk_error2 = true;			
+		    		try{
+						System.out.print("\n\t 현재 프레임 보너스2\n\t 투구2 점수를 입력하세요: ");
+						bonus2 = scoreInput.nextInt();
+						
+						if(bonus2 < 11 && bonus2 > 0) {
+							allframes[0][11] = bonus2;
+							chk_error2 = true;			
+						}
+						else {
+							if (!chk_error2) printError();
+						}
 		    		}
-		    		
-		    		//오류인 경우 
-		    		if (!chk_error2) printError();
+				    catch (InputMismatchException ex) {
+			    		//오류인 경우 
+			    		if (!chk_error2) printError();
+			    		scoreInput.nextLine();
+				    }	
 		    	}
 		    } else {
 		    	boolean chk_error3 = false;
@@ -143,18 +180,26 @@ public class Game {
 		    	int bonus3 = 0;
 
 		    	while(!chk_error3) {
-		    		System.out.print("\n\t  보너스2\n\n\t Ball 2: ");
-		    		bonus3 = scoreInput.nextInt();
-
-		    		if(bonus3 < 11 && bonus3 >= 0 && bonus3 + allframes[0][10] < 11)
-		    		{
-		    		   allframes[1][10] = bonus3;
-		    		   chk_error3 = true;
+		    		
+		    		try {
+			    		System.out.print("\n\t 현재 프레임 보너스2\n\t 투구2 점수를 입력하세요: ");
+			    		bonus3 = scoreInput.nextInt();
+	
+			    		if(bonus3 < 11 && bonus3 >= 0 && bonus3 + allframes[0][10] < 11)
+			    		{
+			    		   allframes[1][10] = bonus3;
+			    		   chk_error3 = true;
+			    		}
+			    		else {	
+				    		//오류인 경우 
+				    		if (!chk_error3) printError();
+			    		}
 		    		}
-
-		    		//오류인 경우 
-		    		if (!chk_error3) printError();
-		    	
+		    		catch (InputMismatchException ex) {
+			    		//오류인 경우 
+			    		if (!chk_error3) printError();
+			    		scoreInput.nextLine();
+		    		}
 		    	}
 		    }
 
@@ -167,66 +212,76 @@ public class Game {
 			int bonus4 = 0;
 
 			while(!chk_error4){
-				System.out.print("\n\t  보너스2\n\n\t 투구2: ");
-				bonus4 = scoreInput.nextInt();
-
-				if(bonus4 <= 10 && bonus4 >= 0){
-					allframes[0][10] = bonus4;
-					chk_error4 = true;
-		    	}
-				
-	    		//오류인 경우 
-	    		if (!chk_error4) printError();				
+				try {
+					System.out.print("\n\t 현재 프레임 보너스2\n\t 투구2 점수를 입력하세요: ");
+					bonus4 = scoreInput.nextInt();
+	
+					if(bonus4 <= 10 && bonus4 >= 0){
+						allframes[0][10] = bonus4;
+						chk_error4 = true;
+			    	}
+					else {
+			    		//오류인 경우 
+			    		if (!chk_error4) printError();
+					}
+				}
+	    		catch (InputMismatchException ex) {
+		    		//오류인 경우 
+		    		if (!chk_error4) printError();
+		    		scoreInput.nextLine();
+	    		}						
 			}
 		}		
 	}
 	
 	// 결과를 집계한다. 
 	public static void sumResult() {
+
+		//첫프레임 점수를 먼저 계산한다.
+		//스패어 처리시 
+		if(allframes[0][0] + allframes[1][0] == 10)
+			scores[0] = 10 + allframes[0][1];
+		else
+			scores[0] = allframes[0][0] + allframes[1][0];
 		
-    	//start
-    	if(allframes[0][0] + allframes[1][0] == 10)
-    	   scores[0] = 10 + allframes[0][1];
-    	 else
-    	   scores[0] = allframes[0][0] + allframes[1][0];
+		//스트라이크 처리시 
+		if(allframes[0][0] == 10) {
+			if(allframes[0][1] == 10)
+				scores[0] = 20 + allframes[0][2];
+			else
+				scores[0] = 10 + allframes[0][1] + allframes[1][1];
+		}
 
-    	//middle
-    	if(allframes[0][0] == 10) {
-    	  if(allframes[0][1] == 10)
-    		 scores[0] = 20 + allframes[0][2];
-    	   else
-    		 scores[0] = 10 + allframes[0][1] + allframes[1][1];
-    	}
-
-    	//end		
+		//2번째부터 10번째의 프레임 계산 	
 		for(int j = 1; j < 10; j++) 
 		{
 			//스트라이크 처리시.
-	    	 if(allframes[0][j] == 10)
-	    	 {
-	    		 if(allframes[0][j + 1] == 10) scores[j] = scores[j - 1] + 20 + allframes[0][j + 2];
-	    		 else scores[j] = scores[j - 1] + 10 + allframes[0][j + 1] + allframes[1][j + 1];
-	    		 continue;
-	    	 }
-
-	    	 //스패어 처리시. 
-	    	 if(allframes[0][j] + allframes[1][j] == 10) {
-	    	   scores[j] = scores[j - 1] + 10 + allframes[0][j + 1];
-	    	 } else {
-	    	   scores[j] = scores[j - 1] + allframes[0][j] + allframes[1][j];
-	    	 }  
-	    }
+			if(allframes[0][j] == 10)
+			{
+				//연속 스트라이크 처리시.	
+				if(allframes[0][j + 1] == 10) scores[j] = scores[j - 1] + 20 + allframes[0][j + 2];
+				else scores[j] = scores[j - 1] + 10 + allframes[0][j + 1] + allframes[1][j + 1];
+				continue;
+			 }
+		
+			//스패어 처리시. 
+			if(allframes[0][j] + allframes[1][j] == 10) {
+				scores[j] = scores[j - 1] + 10 + allframes[0][j + 1];
+			} else {
+				scores[j] = scores[j - 1] + allframes[0][j] + allframes[1][j];
+			}  
+		}
 	}
 	
 	
 	//오류 알림
 	public static void printError() {
-		System.out.println("\n\t\t\t입력값이 잘못되었습니다.!!");
+		System.out.println("\n\t 입력값이 잘못되었습니다.\n\t 0 ~ 10 사이의 값을 입력하세요.");
 	}
 	
 	//스트라이크 인쇄
 	public static void printStrike() {
-		System.out.println("\n\t\t\t스트라이크 !!");
+		System.out.println("\n\t\t\t 스트라이크 !!");
 	}
 
 	//스페어 인쇄
@@ -409,11 +464,14 @@ public class Game {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		
-		String s;
+		String s = "N";
+		boolean chk_continue = false;
 		
 		start();
 		
 		do {
+			
+			chk_continue = false;
 			init();
 	
 			//점수를 입력받는다.
@@ -427,13 +485,25 @@ public class Game {
 				    	
 			//결과를 출력한다. 
 			printResult();
-				    	
-			System.out.print("\n\n\t\t\t다시 하시겠습니까? (Y/N)? ");
-			s = scoreInput.next();
 			
+			while(!chk_continue)
+			{	
+				try {
+					System.out.print("\n\t다시 하시겠습니까? (Y/N)? ");
+					s = scoreInput.next();
+				
+					if((s.toUpperCase().charAt(0) == 'Y') || (s.toUpperCase().charAt(0) == 'N'))
+					{
+						chk_continue = true;
+					}else {
+						throw new Exception("\n\t입력값을 확인하세요. ");
+					}
+				}
+				catch (Exception ex) {
+					System.out.print(ex.getMessage());
+				}
+			}
 			
-			//String s1 = keyIn.nextLine();
-
 		} while(s.toUpperCase().charAt(0) == 'Y');
 	}
 		
