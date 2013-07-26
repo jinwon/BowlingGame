@@ -20,142 +20,193 @@ public class GameTest {
 	
 	@Test
 	public void test2() throws Exception {
-		assertEquals(game.scores.length, 10);
-		assertEquals(game.allframes.length, 2);
+		assertEquals(Game.getScores().length, 10);
+		assertEquals(Game.getAllframes().length, 2);
 	}
 
 	@Test
-	public void test3() throws Exception {
-		game.init();
+	public void test_spare() throws Exception {
+		Game.init();
 		
-		game.allframes[0][0] = 4;
-		game.allframes[1][0] = 5;
+		//insertDrow(frame, times, score)
 		
-		game.sumResult();	
+		Game.insertDrow(0, 0, 4);
+		Game.insertDrow(0, 1, 5);
+				
+		Game.sumResult();	
 
-		assertEquals(game.scores[0], 9);
-		
+		assertEquals(Game.getScores(0), 9);		
 	}
 
+	@Test
+	public void test_strike1() throws Exception {
+		Game.init();
+		
+		Game.insertFirstDrow(0, 10);
+		
+		Game.insertFirstDrow(1, 7);		
+		Game.insertSecondDrow(1, 3);
+				
+		Game.sumResult();	
+
+		assertEquals(Game.getScores(0), 20);		
+	}	
+
+	
+	@Test
+	public void test_strike2() throws Exception {
+		Game.init();
+		
+		Game.insertFirstDrow(0, 10);
+		
+		Game.insertFirstDrow(1, 2);
+		Game.insertSecondDrow(1, 3);
+				
+		Game.sumResult();	
+
+		assertEquals(Game.getScores(0), 15);		
+	}	
+
+	@Test
+	public void test_strike3() throws Exception {
+		Game.init();
+		
+		Game.insertFirstDrow(0, 10);		
+		Game.insertFirstDrow(1, 10);		
+		Game.insertFirstDrow(2, 3);
+				
+		Game.sumResult();	
+
+		assertEquals(Game.getScores(0), 23);		
+	}	
+
+	
 	//스트라이크 테스트 
 	@Test
-	public void test4() throws Exception {
+	public void test_strike4() throws Exception {
 
-		game.init();
-		
-		game.allframes[0][0] = 10;
-		game.allframes[0][1] = 10;
-		game.allframes[0][2] = 10;	
-		
-		game.sumResult();	
-		assertEquals(game.scores[0], 30);
-		
+		Game.init();
+
+		Game.insertFirstDrow(0, 10);		
+		Game.insertFirstDrow(1, 10);
+		Game.insertFirstDrow(2, 10);
+
+		Game.sumResult();	
+		assertEquals(Game.getScores(0), 30);		
 	}
 
 	//종합 테스트 
 	@Test
-	public void test5() throws Exception {
+	public void test_total1() throws Exception {
 
-		game.init();
-		
-		game.allframes[0][0] = 9;
-		game.allframes[1][0] = 1;
-		
-		game.allframes[0][1] = 8;	
-		game.allframes[1][1] = 0;
+		Game.init();
 
-		game.allframes[0][2] = 10;
+		Game.insertFirstDrow(0, 9);
+		Game.insertSecondDrow(0, 1);
 
-		game.allframes[0][3] = 10;		
+		Game.insertFirstDrow(1, 8);
+		Game.insertSecondDrow(1, 0);
 
-		game.allframes[0][4] = 8;
+		Game.insertFirstDrow(2, 10);
+		Game.insertSecondDrow(2, 0);
 
-		game.allframes[0][5] = 10;
+		Game.insertFirstDrow(3, 10);
+		Game.insertSecondDrow(3, 0);
+		
+		Game.insertFirstDrow(4, 8);
+		Game.insertSecondDrow(4, 0);
 
-		game.allframes[0][6] = 8;
-		game.allframes[1][6] = 1;
-		
-		game.allframes[0][7] = 9;
-		game.allframes[1][7] = 1;
-		
-		game.allframes[0][8] = 8;
-		game.allframes[1][8] = 1;
-		
-		game.allframes[0][9] = 10;
-		game.allframes[1][9] = 0;
+		Game.insertFirstDrow(5, 10);
+		Game.insertSecondDrow(5, 0);
 
-		game.allframes[0][10] = 9;		
-		game.allframes[1][10] = 1;
-		
-		game.sumResult();
-		
-		assertEquals(game.scores[0], 18);
-		assertEquals(game.scores[1], 26);
-		
-		assertEquals(game.scores[2], 54);
-		assertEquals(game.scores[3], 72);
-		
-		assertEquals(game.scores[4], 80);
-		assertEquals(game.scores[5], 99);
+		Game.insertFirstDrow(6, 8);
+		Game.insertSecondDrow(6, 1);
+	
+		Game.insertFirstDrow(7, 9);
+		Game.insertSecondDrow(7, 1);
+
+		Game.insertFirstDrow(8, 8);
+		Game.insertSecondDrow(8, 1);
+
+		Game.insertFirstDrow(9, 10);
+		Game.insertSecondDrow(9, 0);
+	
+		Game.insertFirstDrow(10, 9);
+		Game.insertSecondDrow(10, 1);
 				
-		assertEquals(game.scores[6], 108);
-		assertEquals(game.scores[7], 126);		
+		Game.sumResult();
+		
+		assertEquals(Game.getScores(0), 18);
+		assertEquals(Game.getScores(1), 26);
+		
+		assertEquals(Game.getScores(2), 54);
+		assertEquals(Game.getScores(3), 72);
+		
+		assertEquals(Game.getScores(4), 80);
+		assertEquals(Game.getScores(5), 99);
+				
+		assertEquals(Game.getScores(6), 108);
+		assertEquals(Game.getScores(7), 126);		
 
-		assertEquals(game.scores[8], 135);
-		assertEquals(game.scores[9], 155);		
+		assertEquals(Game.getScores(8), 135);
+		assertEquals(Game.getScores(9), 155);		
 	
 	}
 
 	
 	//종합 테스트 
 		@Test
-		public void test6() throws Exception {
+		public void test_total2() throws Exception {
 
-			game.init();
+			Game.init();
 			
-			game.allframes[0][0] = 9;
-			game.allframes[1][0] = 1;
-			
-			game.allframes[0][1] = 0;	
-			game.allframes[1][1] = 10;
+			Game.insertFirstDrow(0, 9);
+			Game.insertSecondDrow(0, 1);
 
-			game.allframes[0][2] = 10;
+			Game.insertFirstDrow(1, 0);
+			Game.insertSecondDrow(1, 10);
 
-			game.allframes[0][3] = 10;		
+			Game.insertFirstDrow(2, 10);
+			Game.insertSecondDrow(2, 0);
 
-			game.allframes[0][4] = 0;
-			game.allframes[1][4] = 5;	
+			Game.insertFirstDrow(3, 10);
+			Game.insertSecondDrow(3, 0);
+			
+			Game.insertFirstDrow(4, 0);
+			Game.insertSecondDrow(4, 5);
 
-			game.allframes[0][5] = 6;
+			Game.insertFirstDrow(5, 6);
+			Game.insertSecondDrow(5, 0);
 
-			game.allframes[0][6] = 0;
-			game.allframes[1][6] = 8;
+			Game.insertFirstDrow(6, 0);
+			Game.insertSecondDrow(6, 8);
+		
+			Game.insertFirstDrow(7, 8);
+			Game.insertSecondDrow(7, 0);
+
+			Game.insertFirstDrow(8, 10);
+			Game.insertSecondDrow(8, 0);
+
+			Game.insertFirstDrow(9, 3);
+			Game.insertSecondDrow(9, 6);
+		
 			
-			game.allframes[0][7] = 8;
-			game.allframes[1][7] = 0;
+			Game.sumResult();
 			
-			game.allframes[0][8] = 10;
-			game.allframes[1][8] = 0;
+			assertEquals(Game.getScores(0), 10);
+			assertEquals(Game.getScores(1), 30);
 			
-			game.allframes[0][9] = 3;
-			game.allframes[1][9] = 6;
+			assertEquals(Game.getScores(2), 50);
+			assertEquals(Game.getScores(3), 65);
 			
-			game.sumResult();
+			assertEquals(Game.getScores(4), 70);
+			assertEquals(Game.getScores(5), 76);
 			
-			assertEquals(game.scores[0], 10);
-			assertEquals(game.scores[1], 30);
-			
-			assertEquals(game.scores[2], 50);
-			assertEquals(game.scores[3], 65);
-			
-			assertEquals(game.scores[4], 70);
-			assertEquals(game.scores[5], 76);
-			
-			assertEquals(game.scores[6], 84);
-			assertEquals(game.scores[7], 92);
+			assertEquals(Game.getScores(6), 84);
+			assertEquals(Game.getScores(7), 92);
 					
-			assertEquals(game.scores[8], 111);
-			assertEquals(game.scores[9], 120);		
+			assertEquals(Game.getScores(8), 111);
+			assertEquals(Game.getScores(9), 120);		
 		
 		}
 	
